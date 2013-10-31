@@ -1,10 +1,12 @@
 #GNU Makefile
 
-target := test
+target := mytest
 
 INCLUDES :=
 
 CFLAGS := 
+
+LDFLAGS := 
 
 default: all
 srcs := $(wildcard *.c)
