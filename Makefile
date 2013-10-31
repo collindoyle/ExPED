@@ -2,20 +2,36 @@
 
 build ?= debug
 
-all:
+THIRD_PARTY_ROOT := ../thirdparty
+
+MUPDF_ROOT := $(THIRD_PARTY_ROOT)/mupdf
+
+LIBXML2_ROOT := $(THIRD_PARTY_ROOT)/libxml2
+
+SVM_ROOT := $(THIRD_PARTY_ROOT)/svm_multiclass
+
+SVM_OBJ := $(wildcard $(SVM_ROOT)/*.o)
+
+SVM_INCLUDE_PATH := $(SVM_ROOT)
+
+MUPDF_LIB_PATH := $(MUPDF_ROOT)/build/$(build)
+
+MUPDF_INCLUDE_PATH := $(MUPDF_ROOT)/include
+
+LIBXML2_LIB_PATH := $(LIBXML2_ROOT)/.libs
+
+LIBXML2_INCLUDE_PATH := $(LIBXML2_ROOT)/include
+
+
+
+default: all
+
+all: 
 	mkdir -p build
 	mkdir -p build/$(build)
-	mkdir -p build/$(build)/mupdf
-	mkdir -p include
-	cd mupdf; make third libs;
-	cp mupdf/build/$(build)/*.a build/$(build)/mupdf/
-	cp -R mupdf/include/* include/ 
-#	cd src; make;
 
+	cd src; make;
+	cd test; make;
 
-clean:
-	rm -f build/$(build)/*
-
-
-default : all
-
+clean:	
+	rm -f build/*.a build/*.o
