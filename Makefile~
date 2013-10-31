@@ -6,11 +6,9 @@ all:
 	mkdir -p build
 	mkdir -p build/$(build)
 	mkdir -p build/$(build)/mupdf
-	mkdir -p include
 	cd mupdf; make third libs;
 	cp mupdf/build/$(build)/*.a build/$(build)/mupdf/
-	cp -R mupdf/include/* include/ 
-#	cd src; make;
+	cd src; make;
 
 
 clean:
