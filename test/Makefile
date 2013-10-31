@@ -7,12 +7,13 @@ INCLUDES :=
 CFLAGS := 
 
 default: all
-
+srcs := $(wildcard *.c)
+objs := $(srcs:.c=.o)
 
 all:	$(target)
 
-$(target): $(wildcard *.o)
-	$(CC) -o $(target) $(wildcard *.o)
+$(target): $(objs)
+	$(CC) -o $(target) $(objs)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
