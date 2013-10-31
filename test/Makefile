@@ -11,8 +11,8 @@ default: all
 
 all:	$(target)
 
-$(target): *.o
-	$(CC) -o $(target) $(wildcard, *.o)
+$(target): $(wildcard *.o)
+	$(CC) -o $(target) $(wildcard *.o)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
