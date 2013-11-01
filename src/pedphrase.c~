@@ -1,0 +1,9 @@
+/* Pedphrase.h : the interface of pedphrase
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedphrase : a set of neighbouring pedchars. contains the information of font, bounding box, and a list of characters
+*/
+
+#include "pedphrase.h"
+#include <stdlib.h>
+

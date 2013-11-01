@@ -21,4 +21,9 @@ typedef enum _pedfontstyle {
 	PEDFONT_BOLD_ITALIC = 0x3
 } pedfontstyle;
 
+typedef enum _peddirection {
+	PEDDIRECT_UNSET = 0x0;
+	PEDDIRECT_HOR = 0x1;
+	PEDDIRECT_VER = 0x2;
+} peddirection;
 #endif
