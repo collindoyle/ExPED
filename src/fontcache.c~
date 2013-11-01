@@ -1,0 +1,28 @@
+/* fontcache.h : the list of font descriptors 
+ * written by CHU Yimin
+ * University of Tokyo
+ * fontcache : maintains the font descriptors, keep it singlar
+*/
+
+#include "fontcache.h"
+#include <stdlib.h>
+
+pedfontcache * initialize_font_cache (pedfontcache * cache) {
+	if (cache == NULL)
+		return NULL;
+	else {
+		cache->font_list = (pedlist *)malloc(sizeof(pedlist));
+		cache->font_list = initialize_list (cache->font_list);
+		return cache;
+	}
+}
+
+pedfont * find_font_from_cache(pedfontcache * cache, pedfont * samplefont) {
+	pedlistnode * node;
+	pedfont * nodefont;
+	nodefont = NULL;
+	node = cache->font_list->head;
+	while (node != NULL) {
+		if (is_equal ((pedfont *)node->content, samplefont) == PED_TRUE)
+	}
+}

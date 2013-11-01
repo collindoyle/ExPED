@@ -1,0 +1,11 @@
+/* pedlist.h : Interface of the linked list structure 
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedlistnode, pedlist : the node and the list of the structure
+*/
+
+typedef struct _pedlistnode {
+	void * content;
+	struct _pedlistnode * next;
+} pedlistnode;
+

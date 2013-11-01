@@ -19,7 +19,7 @@ typedef struct _pedchar {
 	pedfont * pfont;
 } pedchar;
 
-pedchar * initialize_pedchar (pedchar * pchar, char *content, pedbox * box, pedfont * font);
+pedchar * initialize_pedchar (pedchar * pchar, unsigned int content, pedbox * box, pedfont * font);
 pedbox * get_char_box (pedchar *pchar);
 pedfont * get_char_font (pedchar *pchar);
 char * get_char_content (pedchar *pchar);

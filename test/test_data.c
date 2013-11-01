@@ -112,7 +112,7 @@ static void test_print_font (pedfont * font, char * identifier) {
 		printf ("Error: the pointer to %s is NULL. \n", identifier);
 		return;
 	}
-	printf ("The information of font %s : \n", identifier);
+	printf ("The font information of %s : \n", identifier);
 	printf ("Font name : %s, font size : %.2f, font style : ", font->name, font->size);
 	test_print_fontstyle(font->style);
 }
@@ -161,4 +161,43 @@ void test_data_font() {
 
 	free(pfont);
 	free(pfont2);
+}
+
+static void test_print_char(pedchar * pchar, char * identifier) {
+	char *tmp;
+	int len;
+	pedfont * pfd;
+	pedbox *box;
+	if (pchar == NULL) {
+		printf ("Error: the pointer to %s is NULL\n", identifier);
+		return;
+	}
+	tmp  = get_char_content (pchar);
+	pfd = get_char_font(pchar);
+	box = get_char_box(pchar);
+
+	printf ("The information of character %s : \n", identifier);
+	printf ("Content : %s \n", tmp);
+	test_print_box(box, "Bounding box");
+	test_print_font(pfd, identifier);
+	free (tmp);
+}
+
+void test_data_char()
+{
+	pedchar * pchar;
+	pedfont * pfont;
+	pedbox box;
+	initialize_box(&box, 0.0f, 0.0f, 1.0f, 1.0f);
+	pfont = (pedfont *)malloc(sizeof(pedfont));
+	pfont = initialize_font(pfont, "DUMMY FONT", 10.0f, PEDFONT_NONE);
+	pchar = (pedchar *)malloc(sizeof(pedchar));
+
+	pchar = initialize_pedchar (pchar, "l", &box, pfont);
+	test_print_char(pchar, "char1");
+	
+	set_char_content(pchar, "あ");
+	test_print_char(pchar, "char1");
+	free (pfont);
+	free (pchar);
 }

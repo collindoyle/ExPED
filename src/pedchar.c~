@@ -173,10 +173,10 @@ static int convert_ucs_to_str(char *str, unsigned int ucs)
 	return 4;
 }
 
-pedchar * initialize_pedchar (pedchar *pchar, char * content, pedbox *box, pedfont *font) {
+pedchar * initialize_pedchar (pedchar *pchar, unsigned int content, pedbox *box, pedfont *font) {
 	if (pchar == NULL)
 		return NULL;
-	set_char_content(pchar, content);
+	pchar->content = content;
 	initialize_box(&(pchar->boundingbox), box->x0, box->y0, box->x1, box->y1);
 	pchar->pfont = font;
 	return pchar;

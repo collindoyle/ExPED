@@ -11,7 +11,7 @@
 #include "common.h"
 #include "pedbox.h"
 #include "pedfontdes.h"
-/*#include "pedchar.h"*/
+#include "pedchar.h"
 
 void test_data_box();
 void test_data_font();
