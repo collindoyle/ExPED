@@ -36,4 +36,4 @@ all:
 clean:	
 	rm -f build/*.a build/*.o
 	cd src;make clean
-	ce test;make clean
+	cd test;make clean

@@ -10,6 +10,8 @@ PROJECT_ROOT := ..
 
 THIRD_PARTY_ROOT := ../$(PROJECT_ROOT)/thirdparty
 
+DEPENDENCY := $(wildcard $(PROJECT_ROOT)/src/*.a)
+
 MUPDF_ROOT := $(THIRD_PARTY_ROOT)/mupdf
 
 MUPDF_LIB_PATH := $(MUPDF_ROOT)/build/$(build)
@@ -34,7 +36,7 @@ objs := $(srcs:.c=.o)
 
 all:	$(target)
 
-$(target): $(objs)
+$(target): $(objs) $(DEPENDENCY)
 	$(CC) -o $(target) $(objs) $(LDFLAGS)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@

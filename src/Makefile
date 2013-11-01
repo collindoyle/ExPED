@@ -32,8 +32,8 @@ $(target): $(OBJ_FILES)
 	ar rvs $(target) $(OBJ_FILES) $(LIBS)
 
 .c.o: 
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -lm
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ 
 
 clean :
-	rm $(target)
-	rm *.o;
+	rm ./$(target)
+	rm $(wildcard *.o);
