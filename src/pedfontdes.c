@@ -9,6 +9,15 @@
 #include "pedfontdes.h"
 #include <string.h>
 
+pedfont * initialize_font (pedfont * pfont, char * name, float size, pedfontstyle style) {
+	if (pfont == NULL)
+		return NULL;
+	strcpy(pfont->name,name);
+	pfont->size = size;
+	pfont->style = style;
+	return pfont;
+}
+
 PED_BOOL is_equal (pedfont *fonta, pedfont *fontb) {
 	if ( fonta == NULL || fontb == NULL )
 		return PED_FALSE;

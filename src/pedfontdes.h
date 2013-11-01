@@ -16,6 +16,7 @@ typedef struct _pedfont {
 	pedfontstyle style;
 } pedfont;
 
+pedfont * initialize_font (pedfont * pfont, char * name, float size, pedfontstyle style);
 
 PED_BOOL is_equal (pedfont *fonta, pedfont *fontb);
 

@@ -88,3 +88,77 @@ void test_data_box() {
 	free(box2);
 	free(box3);
 }
+
+static void test_print_fontstyle (pedfontstyle style) {
+	switch (style) {
+	case PEDFONT_NONE:
+		printf ("normal \n");
+		break;
+	case PEDFONT_BOLD:
+		printf ("bold \n");
+		break;
+	case PEDFONT_ITALIC:
+		printf ("italic \n");
+		break;
+	case PEDFONT_BOLD_ITALIC:
+		printf ("bold and italic \n");
+		break;
+	}
+	return;
+}
+
+static void test_print_font (pedfont * font, char * identifier) {
+	if (font == NULL) {
+		printf ("Error: the pointer to %s is NULL. \n", identifier);
+		return;
+	}
+	printf ("The information of font %s : \n", identifier);
+	printf ("Font name : %s, font size : %.2f, font style : ", font->name, font->size);
+	test_print_fontstyle(font->style);
+}
+
+void test_data_font() {
+	pedfont * pfont, *pfont2;
+	PED_BOOL res;
+	printf ("Testing font structure \n");
+	pfont = (pedfont *)malloc(sizeof(pedfont));
+	pfont2 = (pedfont *)malloc(sizeof(pedfont));
+	strcpy(pfont->name, "DUMMY FONT NAME");
+	pfont->size = 10.0f;
+	pfont->style = PEDFONT_NONE;
+
+	test_print_font (pfont, "font1");
+
+	pfont2 = initialize_font(pfont2, "DUMMY FONT NAME", 10.0f, PEDFONT_NONE);
+	test_print_font (pfont2, "font2");
+	
+	printf ("Test 1: compare the two fonts. Does %s equal to  %s ? :  ", "font1", "font2");
+	res = is_equal(pfont, pfont2);
+	test_print_bool (res);
+
+	pfont2->style = PEDFONT_BOLD_ITALIC;
+	res = is_equal(pfont, pfont2);
+	test_print_font(pfont2, "font2");
+	printf ("Now compare again: Does %s equal to %s? : ", "font1", "font2");
+	test_print_bool (res);
+
+	printf ("Test 2: whether the styles are identified : \n");
+	res = is_bold (pfont);
+	printf ("Is %s bold ? :", "font1");
+	test_print_bool(res);
+
+	printf ("Is %s italic ? :", "font1");
+	res = is_italic (pfont);
+	test_print_bool(res);
+
+	res = is_bold (pfont2);
+	printf ("Is %s bold ? :", "font2");
+	test_print_bool(res);
+
+	printf ("Is %s italic ? :", "font2");
+	res = is_italic (pfont2);
+	test_print_bool(res);
+
+	free(pfont);
+	free(pfont2);
+}
