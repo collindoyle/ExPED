@@ -32,7 +32,7 @@ $(target): $(OBJ_FILES)
 	ar rvs $(target) $(OBJ_FILES) $(LIBS)
 
 .c.o: 
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -lm
 
 clean :
 	rm $(target)
