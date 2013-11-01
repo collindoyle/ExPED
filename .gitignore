@@ -17,4 +17,6 @@
 *.out
 *.app
 
+test/mytest
+
 mupdf/generated/*.h
