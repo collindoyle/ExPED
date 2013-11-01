@@ -26,7 +26,7 @@ INCLUDES := -I$(SRC_ROOT) -I$(MUPDF_INCLUDE_PATH)
 
 CFLAGS :=  -Wall $(INCLUDES) 
 
-LDFLAGS := -L$(MUPDF_LIB_PATH) $(MUPDF_LIBS) -L$(PED_LIB_PATH) $(PED_LIBS) 
+LDFLAGS := -L$(MUPDF_LIB_PATH) $(MUPDF_LIBS) -L$(PED_LIB_PATH) $(PED_LIBS) -lm 
 
 default: all
 srcs := $(wildcard *.c)
