@@ -16,7 +16,6 @@
 *.exe
 *.out
 *.app
-
-test/mytest
+mytest
 
 mupdf/generated/*.h
