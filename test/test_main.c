@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "test_data.h"
 
 int main(int argc, char ** argv)
 {
-	printf("This is the main entry to test the library \n");
+	test_data_box();
 	return 1;
 }

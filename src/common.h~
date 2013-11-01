@@ -14,11 +14,6 @@
 
 typedef unsigned int PED_BOOL;
 
-typedef enum _pedfontstyle {
-	PEDFONT_NONE = 0x0,
-	PEDFONT_BOLD = 0x1,
-	PEDFONT_ITALIC = 0x2,
-	PEDFONT_BOLD_ITALIC = 0x3
-} pedfontstyle;
 
-#endif
+
+#endf

@@ -1,0 +1,19 @@
+/* pedchar.h : Interface for the character in the document
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedchar : entity of one single character in the document, 
+ *                 contains the bounding box, font descriptor, 
+ *                 and the content (as integer) of the character
+*/
+
+#ifndef __PEDCHAR
+#define __PEDCHAR
+
+#include "pedbox.h"
+#include "pedfontdes.h"
+
+ 
+
+
+
+#endif

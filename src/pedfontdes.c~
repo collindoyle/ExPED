@@ -1,0 +1,22 @@
+/* pedfontdes.c : Implementation of the font descriptor
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedfont : the structure to contain the font information of characters and phrases
+ *                Contains the font name, font size and font style
+ * The needed functions are the comparasion and style check 
+*/
+
+#include "pedfontdes.h"
+#include <string.h>
+
+PEDBOOL is_equal (pedfont *fonta, pedfont *fontb) {
+	if ( fonta == NULL || fontb == NULL )
+		return PEDFALSE;
+	if ( strcmp(fonta->name, fontb->name) != 0)
+		return PEDFALSE;
+	if ( fonta->size != fontb->size)
+		return PEDFALSE;
+	if ( fonta->style != fontb->style)
+		return PEDFALSE;
+	return PEDTRUE;
+}

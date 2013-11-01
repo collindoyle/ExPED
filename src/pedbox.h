@@ -27,12 +27,12 @@ PED_BOOL is_intersect (pedbox * alpha, pedbox *beta);
 
 pedbox * grow_box (pedbox * alpha, pedbox * beta);
 
-float area_of_box (pedbox box);
+float area_of_box (pedbox *box);
 
-float ratio_of_box (pedbox box);
+float ratio_of_box (pedbox *box);
 
+void distance_to (pedbox *from, pedbox *to, float *x, float *y);
 
-
-
+fz_irect * bounding_box (fz_irect * irect, pedbox *box);
 
 #endif

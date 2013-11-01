@@ -1,0 +1,8 @@
+/* test_data.c : test the functions and correcness of the data structures in the project
+ * written by CHU Yimin
+ * University of Tokyo
+ * contains the functions to test the correctness of pedbox, pedfont, pedchar, pedphrase, pedline, pedzone, peddoc
+ * as well as the data structure list and fontcache
+ *
+*/
+
