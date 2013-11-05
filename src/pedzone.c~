@@ -1,0 +1,22 @@
+/* pedzone.c : implementaiton of the zone entity
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedzone : the entity between page and line, it matches a paragraph we see on the page.  This is the unit that will be classified.
+ */
+
+#include "pedzone.h"
+#include <stdlib.h>
+
+pedzone * initialize_pedzone (pedzone *zone) {
+	initialize_list(zone->linelist);
+	zone->length = 0;
+        zone->zoneclass = PEDZONE_UNSET;
+	zone->dir = PEDDIRECT_UNSET;
+	initialize_box(&(zone->boundingbox));
+	return zone;
+}
+
+void finalize_zone(pedzone *zone) {
+	finalize_list(zone->linelist);
+	free(zone);
+}

@@ -22,8 +22,10 @@ pedphrase * initialize_phrase(pedphrase * phrase);
 
 int add_character_to(pedphrase *phrase, pedchar * t);
 
+int determine_phrase_direction(pedphrase * phrase);
+
 PED_BOOL is_space_phrase (pedphrase * phrase);
 
-void finalize(pedphrase * phrase);
+void finalize_phrase(pedphrase * phrase);
 
 #endif

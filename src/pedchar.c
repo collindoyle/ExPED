@@ -206,7 +206,7 @@ void set_char_content (pedchar *pchar, char *chars) {
 	unsigned int len;
 	len = convert_str_to_ucs(&res, chars);
 	if (res == Bad)
-		pchar->content = 0x32;
+		pchar->content = 0x20;
 	else
 		pchar->content = res; 
 }

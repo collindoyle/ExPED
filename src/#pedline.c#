@@ -1,0 +1,11 @@
+/* pedline.c : Implementation of the pedline structure
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedline : the entity presents for a pedline, between the pedzone and pedphrase. Inside a pedline the font can vary.
+ */
+
+#include "common.h"
+#include "pedline.h"
+#include <stdlib.h>
+
+

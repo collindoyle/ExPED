@@ -24,6 +24,6 @@ pedlist * initialize_list (pedlist * list);
 
 pedlist * append_node_to_list(pedlist * list, pedlistnode * tail_node);
 
-void free_pedlist (pedlist * list);
+void finalize_list (pedlist * list);
 
 #endif

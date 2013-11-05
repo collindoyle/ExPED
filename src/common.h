@@ -22,8 +22,31 @@ typedef enum _pedfontstyle {
 } pedfontstyle;
 
 typedef enum _peddirection {
-	PEDDIRECT_UNSET = 0x0;
-	PEDDIRECT_HOR = 0x1;
-	PEDDIRECT_VER = 0x2;
+	PEDDIRECT_UNSET = 0x0,
+	PEDDIRECT_HOR = 0x1,
+	PEDDIRECT_VER = 0x2
 } peddirection;
+
+typedef enum _pedlinetype {
+	PEDLINE_UNKNOWN = 0x0,
+	PEDLINE_START = 0x1,
+	PEDLINE_END = 0x2,
+	PEDLINE_MIDDLE = 0x3
+} pedlinetype;
+
+typedef enum _pedzoneclass {
+	PEDZONE_UNSET,
+	PEDZONE_BODY,
+	PEDZONE_TITLE,
+	PEDZONE_ABSTRACT,
+	PEDZONE_AUTHOR,
+	PEDZONE_AFFILATION,
+	PEDZONE_KEYWORD,
+	PEDZONE_CAPTION,
+	PEDZONE_PAGENUM,
+	PEDZONE_SUBTITLE,
+	PEDZONE_REFERENCE,
+	PEDZONE_START,
+	PEDZONE_END
+}pedzoneclass;
 #endif

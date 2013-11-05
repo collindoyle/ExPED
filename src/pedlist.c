@@ -50,7 +50,7 @@ pedlist * append_node_to_list (pedlist * list, pedlistnode * tail_node) {
 	}
 }
 
-void free_pedlist (pedlist *list) {
+void finalize_list (pedlist *list) {
 	pedlistnode * pointer, *tbdel;
 	if (list == NULL)
 		return;
@@ -65,4 +65,3 @@ void free_pedlist (pedlist *list) {
 		return;
 	}
 }
-
