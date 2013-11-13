@@ -6,27 +6,52 @@
 
 #include "pedbox.h"
 #include <math.h>
+#include <stdlib.h>
 
-pedbox * initialize_box (pedbox * init_box, float _x0, float _y0, float _x1, float _y1) {
-	if ( init_box == NULL) {
-		return NULL;
+pedbox * init_box ( pedbox * box) {
+	pedbox * newbox;
+	if (box == NULL) {
+		newbox = (pedbox *)malloc(sizeof(pedbox));
 	}
-	init_box->x0 = _x0;
-	init_box->y0 = _y0;
-	init_box->x1 = _x1;
-	init_box->y1 = _y1;
-	return init_box;
+	else {
+		newbox = box;
+	}
+		newbox->x0 = 0.0f;
+		newbox->y0 = 0.0f;
+		newbox->x1 = 0.0f;
+		newbox->y1 = 0.0f;
+		return newbox;
+      
 }
 
-pedbox * initialize_box_with_rect(pedbox * init_box, fz_rect rect) {
-	if ( init_box == NULL) {
-		return NULL;
+pedbox * init_box_with_value (pedbox * box, float _x0, float _y0, float _x1, float _y1) {
+	pedbox * newbox;
+	if ( box == NULL) {
+		newbox = (pedbox *)malloc(sizeof(pedbox));
 	}
-	init_box->x0 = rect.x0;
-	init_box->y0 = rect.y0;
-	init_box->x1 = rect.x1;
-	init_box->y1 = rect.y1;
-	return init_box;
+	else {
+		newbox = box;
+	}
+	newbox->x0 = _x0;
+	newbox->y0 = _y0;
+        newbox->x1 = _x1;
+	newbox->y1 = _y1;
+	return newbox;
+}
+
+pedbox * init_box_with_rect(pedbox * box, fz_rect rect) {
+	pedbox *newbox;
+	if ( box == NULL) {
+		newbox = (pedbox *)malloc(sizeof(pedbox));
+	}
+	else {
+		newbox = box;
+	}
+	newbox->x0 = rect.x0;
+	newbox->y0 = rect.y0;
+	newbox->x1 = rect.x1;
+	newbox->y1 = rect.y1;
+	return newbox;
 }
 
 PED_BOOL is_in_box (pedbox * box, float x, float y) {
@@ -57,14 +82,14 @@ PED_BOOL is_intersect (pedbox * alpha, pedbox * beta) {
 pedbox * grow_box (pedbox * alpha, pedbox *beta) {
 	if ( alpha == NULL || beta == NULL)
 		return NULL;
-	if(area_of_box(alpha) == 0) {
+	if(get_area(alpha) == 0) {
 		alpha->x0 = beta->x0;
 		alpha->y0 = beta->y0;
 		alpha->x1 = beta->x1;
 		alpha->y1 = beta->y1;
 		return alpha; 
 	}
-	if (area_of_box(beta) == 0) {
+	if (get_area(beta) == 0) {
 		return alpha;
 	}
 	alpha->x0 = alpha->x0 < beta->x0 ? alpha->x0 : beta->x0;
@@ -74,13 +99,13 @@ pedbox * grow_box (pedbox * alpha, pedbox *beta) {
 	return alpha;
 }
 
-float area_of_box (pedbox *box) {
+float get_area (pedbox *box) {
 	float result;
 	result = (box->x1-box->x0)*(box->y1-box->y0);
 	return result;
 }
 
-float ratio_of_box (pedbox *box) {
+float get_ratio (pedbox *box) {
 	float result;
 	result = (box->y1 - box->y0);
 	if (result == 0)
@@ -89,7 +114,7 @@ float ratio_of_box (pedbox *box) {
 	return result;
 }
 
-void distance_to (pedbox *from, pedbox *to, float *x, float *y) {
+void distance (pedbox *from, pedbox *to, float *x, float *y) {
 	if ( is_intersect (from, to)) {
 		*x = 0.0f, *y = 0.0f;
 		return;
@@ -110,7 +135,7 @@ void distance_to (pedbox *from, pedbox *to, float *x, float *y) {
 }
 
 
-fz_irect * bounding_box (fz_irect * irect, pedbox *box) {
+fz_irect * bound_box_to_irect (fz_irect * irect, pedbox *box) {
 	irect->x0 = floor(box->x0);
 	irect->x1 = ceilf(box->x1);
 	irect->y0 = floor(box->y0);

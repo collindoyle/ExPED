@@ -6,7 +6,7 @@
  *                 need to extract the features from the zone
  */
 
-#ifndf __PEDZONE
+#ifndef __PEDZONE
 #define __PEDZONE
 
 #include "common.h"
@@ -15,17 +15,19 @@
 #include "pedlist.h"
 
 typedef struct _pedzone {
-	pedlist * linelist;
-	pedbox boundingbox;
+	pedlist * lines;
+	pedbox * zonebox;
 	peddirection dir;
 	int length;
 	pedzoneclass zoneclass;
 } pedzone;
 
-pedzone * initialize_zone (pedzone * zone);
+pedzone * init_zone (pedzone * zone);
 
 int add_line_to(pedzone * zone, pedline * line);
 
 void finalize_zone(pedzone * zone);
+
+void extract_features(pedzone *zone);
 
 #endif

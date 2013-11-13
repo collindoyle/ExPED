@@ -4,22 +4,25 @@
  * fontcache : maintains the font descriptors, keep it singlar
 */
 
-#include "fontcache.h"
+#include "pedfontcache.h"
 #include <stdlib.h>
 
-pedfontcache * initialize_font_cache (pedfontcache * cache) {
+pedfontcache * init_font_cache (pedfontcache * cache) {
+	pedfontcache * newcache;
 	if (cache == NULL)
-		return NULL;
+		newcache = (pedfontcache *)malloc(sizeof(pedfontcache));
 	else {
-		cache->font_list = (pedlist *)malloc(sizeof(pedlist));
-		cache->font_list = initialize_list (cache->font_list);
-		return cache;
+		newcache = cache;
 	}
+	newcache->font_list = init_list(NULL);
+	return newcache;
 }
 
 pedfont * find_font_from_cache(pedfontcache * cache, pedfont * samplefont) {
 	pedlistnode * node;
 	pedfont * nodefont;
+	if (cache == NULL)
+		return NULL;
 	nodefont = NULL;
 	node = cache->font_list->head;
 	while (node != NULL) {
@@ -35,20 +38,30 @@ pedfont * find_font_from_cache(pedfontcache * cache, pedfont * samplefont) {
 pedfontcache * append_font_to_cache (pedfontcache *cache, pedfont * samplefont) {
 	pedlistnode * fontnode;
 	pedlist * fontlist;
+	pedfontcache *rescache;
 	if (cache == NULL)
-		return NULL;
+		rescache = init_font_cache(NULL);
+	else
+		rescache = cache;
 	if (samplefont == NULL)
-		return NULL;
-	fontnode = (pedlistnode *)malloc (sizeof(pedlistnode));
-	fontnode = initialize_list_node (fontnode, (void *)samplefont);
-	fontlist = append_node_to_list(cache->font_list, fontnode);
-	return cache;
+		return rescache;
+	fontnode = init_node(NULL,(void *)samplefont);
+	fontlist = append_node_to_list(rescache->font_list, fontnode);
+	return rescache;
 }
 
 void finalize_cache (pedfontcache * cache) {
+	pedlistnode * pnode;
 	if (cache == NULL)
 		return;
-	free_pedlist(cache->font_list);
+	pnode = cache->font_list->head;
+	while (pnode != NULL) {
+		free(pnode->content);
+		pnode->content = NULL;
+		pnode = pnode->next;
+	}
+	finalize_list(cache->font_list);
 	free(cache->font_list);
 	cache->font_list = NULL;
+	free(cache);
 }

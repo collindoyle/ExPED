@@ -11,13 +11,17 @@
 #include "pedfontdes.h"
 
 
-typedef struct _fontcache {
+typedef struct _pedfontcache {
 	pedlist * font_list;
-} fontcache;
+} pedfontcache;
 
-fontcache * initialize_font_cache (fontcache * cache);
+pedfontcache* init_font_cache (pedfontcache * cache);
 
+pedfont * find_font (pedfontcache *cache, pedfont * samplefont);
 
+pedfontcache* add_font (pedfontcache *cache, pedfont * samplefont);
+ 
+void finalize_cache (pedfontcache *cache);
 
 
 #endif

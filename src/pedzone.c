@@ -7,18 +7,35 @@
 #include "pedzone.h"
 #include <stdlib.h>
 
-pedzone * initialize_zone (pedzone *zone) {
-	initialize_list(zone->linelist);
-	zone->length = 0;
-        zone->zoneclass = PEDZONE_UNSET;
-	zone->dir = PEDDIRECT_UNSET;
-	initialize_box(&(zone->boundingbox));
-	return zone;
+pedzone * init_zone (pedzone *zone) {
+	pedzone * newzone;
+	if (zone == NULL) {
+		newzone = (pedzone *)malloc(sizeof(pedzone));
+	}
+	else {
+		newzone = zone;
+	}
+	newzone->lines = init_list(NULL);
+	newzone->zonebox = init_box(NULL);
+	newzone->length = 0;
+        newzone->zoneclass = PEDZONE_UNSET;
+	newzone->dir = PEDDIRECT_UNSET;
+	return newzone;
 }
 
 void finalize_zone(pedzone *zone) {
+	pedlistnode * pnode;
+	pedline * line;
 	if (zone != NULL) {
-		finalize_list(zone->linelist);
+		pnode = zone->lines->head;
+		while (pnode != NULL) {
+			line = (pedline *)pnode->content;
+			finalize_line (line);
+			pnode->content = NULL;
+			pnode = pnode->next;
+		}
+		finalize_list(zone->lines);
+		free(zone->zonebox);
 		free(zone);
 	}
 }
@@ -27,18 +44,19 @@ int add_line_to (pedzone * zone, pedline * line) {
 	pedlistnode * node;
 	if ( zone == NULL || line == NULL)
 		return 0;
-	node = (pedlistnode *)malloc(sizeof(pedlistnode));
-	node = initialize_list_node(node, (void *)line);
-	append_node_to_list(zone->linelist, node);
+	node = init_node(NULL, (void *)line);
+	zone->lines = append_node_to_list(zone->lines, node);
 	if (zone->length == 0) {
 		zone->dir = line->dir;
-		initialize_box(&(zone->boundingbox), line->boundingbox.x0, line->boundingbox.y0, line->boundingbox.x1, line->boundingbox.y1);
+		zone->zonebox = init_box_with_value(zone->zonebox, line->linebox->x0, line->linebox->y0, line->linebox->x1, line->linebox->y1);
 	        zone->length = 1;
 	}
 	else {
-		grow_box(&(zone->boundingbox),&(line->boundingbox));
+		zone->zonebox = grow_box(zone->zonebox,line->linebox);
 		zone->length += 1;
 	}
 	return (zone->length);
 }
 
+void extract_features (pedzone *zone) {
+}

@@ -7,46 +7,52 @@
 #include "pedlist.h"
 #include <stdlib.h>
 
-pedlistnode * initialize_list_node (pedlistnode * node, void * content) {
+pedlistnode * init_node (pedlistnode * node, void * content) {
+	pedlistnode * newnode;
 	if (node == NULL)
-		return NULL;
+		newnode = (pedlistnode *) malloc(sizeof(pedlistnode));
 	else {
-		node->content = content;
-		node->next = NULL;
-		return node;
+		newnode = node;
 	}
+		newnode->content = content;
+		newnode->next = NULL;
+		return newnode;
 }
 
 void finalize_node(pedlistnode *node) {
 	if (node->content != NULL) {
-		free(node->content);
 		node->content = NULL;
 	}
 	free(node);
 }
 
-pedlist * initialize_list (pedlist *list) {
+pedlist * init_list (pedlist *list) {
+	pedlist *newlist;
 	if (list == NULL)
-		return NULL;
+		newlist = (pedlist *)malloc(sizeof(pedlist));
 	else {
-		list->head = NULL;
-		list->tail = NULL;
-		return list;
+		newlist = list;
 	}
+		newlist->head = NULL;
+		newlist->tail = NULL;
+		return newlist;
 }
 
 pedlist * append_node_to_list (pedlist * list, pedlistnode * tail_node) {
+	pedlist * reslist;
 	if (list == NULL)
-		return NULL;
-	if (list->head == NULL) {
-		list->head = tail_node;
-		list->tail = tail_node;
-		return list;
+		reslist = init_list(NULL);
+	else
+		reslist = list;
+	if (reslist->head == NULL) {
+		reslist->head = tail_node;
+		reslist->tail = tail_node;
+		return reslist;
 	}
 	else {
-		list->tail->next = tail_node;
-		list->tail = tail_node;
-		return list;
+		reslist->tail->next = tail_node;
+		reslist->tail = tail_node;
+		return reslist;
 	}
 }
 

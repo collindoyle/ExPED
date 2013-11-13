@@ -74,8 +74,8 @@ pedlinetype determine_line_type(pedline *line, pedline * prev, pedline *next) {
 		return PEDLINE_END;
 	height = line->linebox->y1 - line->linebox->y0;
 	width = line->linebox->x1 - line->linebox->x0;
-	distance(prev, line, &x_prev, &y_prev);
-	distance(line, next, &x_next, &y_next);
+	distance(prev->linebox, line->linebox, &x_prev, &y_prev);
+	distance(line->linebox, next->linebox, &x_next, &y_next);
 	if (line->dir == PEDDIRECT_HOR) {
 		_distprev = y_prev/height;
 		_distnext = y_next/height;

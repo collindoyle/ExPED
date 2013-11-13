@@ -8,14 +8,20 @@
 
 #include "pedfontdes.h"
 #include <string.h>
+#include <stdlib.h>
 
-pedfont * initialize_font (pedfont * pfont, char * name, float size, pedfontstyle style) {
-	if (pfont == NULL)
-		return NULL;
-	strcpy(pfont->name,name);
-	pfont->size = size;
-	pfont->style = style;
-	return pfont;
+pedfont * init_font (pedfont * pfont, char * name, float size, pedfontstyle style) {
+	pedfont * newfont;
+	if (pfont == NULL) {
+		newfont  = (pedfont *)malloc(sizeof(pedfont));
+	}
+	else {
+		newfont = pfont;
+	}
+	strcpy(newfont->name,name);
+	newfont->size = size;
+	newfont->style = style;
+	return newfont;
 }
 
 PED_BOOL is_equal (pedfont *fonta, pedfont *fontb) {

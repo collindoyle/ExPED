@@ -17,10 +17,10 @@ typedef struct _pedlist {
 	pedlistnode *tail;
 } pedlist;
 
-pedlistnode * initialize_list_node (pedlistnode * node, void * content);
+pedlistnode * init_node (pedlistnode * node, void * content);
 void finalize_node(pedlistnode *node);
 
-pedlist * initialize_list (pedlist * list);
+pedlist * init_list (pedlist * list);
 
 pedlist * append_node_to_list(pedlist * list, pedlistnode * tail_node);
 

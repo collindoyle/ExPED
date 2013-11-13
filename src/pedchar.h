@@ -15,16 +15,19 @@
 
 typedef struct _pedchar {
 	unsigned int content;
-	pedbox boundingbox;
+	pedbox  * charbox;
 	pedfont * pfont;
 } pedchar;
 
-pedchar * initialize_pedchar (pedchar * pchar, char *content, pedbox * box, pedfont * font);
+pedchar * init_pedchar (pedchar * pchar, char *content, pedbox * box, pedfont * font);
+void finalize_char (pedchar *pchar);
 pedbox * get_char_box (pedchar *pchar);
 pedfont * get_char_font (pedchar *pchar);
 char * get_char_content (pedchar *pchar);
 void set_char_content (pedchar *pchar, char *chars);
 
+int convert_ucs_to_str (char *str, unsigned int ucs);
 
+int convert_str_to_ucs (unsigned int *ucs, char *str);
 
 #endif

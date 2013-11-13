@@ -7,6 +7,7 @@
 */
 
 #include "pedchar.h"
+#include <stdlib.h>
 
 enum
 {
@@ -44,7 +45,7 @@ enum
 	Bad = Runeerror,
 };
 
-static int convert_str_to_ucs(unsigned int *ucs, char *str)
+int convert_str_to_ucs(unsigned int *ucs, char *str)
 {
 	int c, c1, c2, c3;
 	long l;
@@ -118,7 +119,7 @@ bad:
 	return 1;
 }
 
-static int convert_ucs_to_str(char *str, unsigned int ucs)
+int convert_ucs_to_str(char *str, unsigned int ucs)
 {
 	/* Runes are signed, so convert to unsigned for range check. */
 	unsigned long c = (unsigned long)ucs;
@@ -173,19 +174,29 @@ static int convert_ucs_to_str(char *str, unsigned int ucs)
 	return 4;
 }
 
-pedchar * initialize_pedchar (pedchar *pchar, char * content, pedbox *box, pedfont *font) {
-	if (pchar == NULL)
-		return NULL;
-	set_char_content(pchar, content);
-	initialize_box(&(pchar->boundingbox), box->x0, box->y0, box->x1, box->y1);
-	pchar->pfont = font;
-	return pchar;
+pedchar * init_pedchar (pedchar *pchar, char * content, pedbox *box, pedfont *font) {
+	pedchar * newchar;
+	if (pchar == NULL) {
+		newchar = (pedchar *)malloc(sizeof(pedchar));
+		newchar->charbox = NULL;
+		newchar->pfont = NULL;
+	}
+	else
+		newchar = pchar;
+	set_char_content(newchar, content);
+	if (newchar->charbox != NULL) {
+		free(newchar->charbox);
+		newchar->charbox = NULL;
+	}
+	newchar->charbox = init_box_with_value(NULL, box->x0, box->y0, box->x1, box->y1);
+	newchar->pfont = font;
+	return newchar;
 }
 
 pedbox * get_char_box (pedchar *pchar) {
 	if (pchar == NULL)
 		return NULL;
-	return &(pchar->boundingbox);
+	return pchar->charbox;
 }
 
 pedfont * get_char_font (pedchar *pchar) {
@@ -195,8 +206,12 @@ pedfont * get_char_font (pedchar *pchar) {
 }
 
 char * get_char_content (pedchar *pchar) {
-	char *c = (char *)malloc(4*sizeof(char));
+	
+	char *c;
 	int i;
+	if (pchar == NULL)
+		return NULL;
+	c = (char *)malloc(4*sizeof(char));
 	i = convert_ucs_to_str(c, pchar->content);
 	return c;
 }
@@ -204,9 +219,21 @@ char * get_char_content (pedchar *pchar) {
 void set_char_content (pedchar *pchar, char *chars) {
 	unsigned int res;
 	unsigned int len;
+	if (pchar == NULL)
+		return;
 	len = convert_str_to_ucs(&res, chars);
 	if (res == Bad)
 		pchar->content = 0x20;
 	else
 		pchar->content = res; 
 }
+
+void finalize_char (pedchar *pchar) {
+	if (pchar == NULL)
+		return;
+        if (pchar->charbox != NULL)
+		free(pchar->charbox);
+	free (pchar);
+	return;
+}
+

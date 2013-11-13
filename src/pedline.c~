@@ -1,0 +1,37 @@
+/* pedline.c : Implementation of the pedline structure
+ * written by CHU Yimin
+ * University of Tokyo
+ * pedline : the entity presents for a pedline, between the pedzone and pedphrase. Inside a pedline the font can vary.
+ */
+
+#include "common.h"
+#include "pedline.h"
+#include <stdlib.h>
+
+pedline * initialize_line(pedline *line) {
+	if(line == NULL)
+		return NULL;
+	initialize_list (line->phrases);
+	initialize_box(&(line->boundingbox),0,0,0,0);
+	line->length = 0;
+	line->dir = PEDDIRECT_UNSET;
+	line->linetype = PEDLINE_UNKNOWN;
+	
+	return line;
+}
+
+void finalize_line (pedline * line) {
+	pedlistnode * pnode;
+	pedphrase * phrase;
+	if ( line != NULL) {
+		pnode = line->phrases->head;
+		while (pnode != NULL) {
+			phrase = (pedphrase *)pnode->content;
+			finalize_phrase(phrase);
+			pnode->content = NULL;
+			pnode = pnode->next;
+		}
+		finalize_list (line->phrases);
+		free(line);
+	}
+}

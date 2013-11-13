@@ -7,18 +7,19 @@
 #ifndef __PEDPHRASE
 #define __PEDPHRASE
 
+#include "common.h"
 #include "pedchar.h"
 #include "pedlist.h"
 
 typedef struct _pedphrase {
 	pedlist * chars;
 	int length;
-	pedbox boundingbox;
+	pedbox * phrasebox;
 	pedfont * font;
 	peddirection dir;
 } pedphrase;
 
-pedphrase * initialize_phrase(pedphrase * phrase);
+pedphrase * init_phrase(pedphrase * phrase);
 
 int add_character_to(pedphrase *phrase, pedchar * t);
 

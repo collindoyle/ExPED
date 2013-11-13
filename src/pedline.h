@@ -15,17 +15,24 @@
 typedef struct _pedline {
 	pedlist * phrases;
 	int length;
-	pedbox boundingbox;
+	pedbox * linebox;
 	peddirection dir;
 	pedlinetype linetype;
 } pedline;
 
-pedline * initialize_line(pedline *line) {
-	if(line == NULL)
-		return NULL;
-	
-	return line;
-}
+pedline * init_line (pedline * line) ;
+void finalize_line (pedline * line);
 
+int add_phrase_to (pedline * line, pedphrase * phrase);
+
+pedlinetype determine_line_type(pedline *line, pedline * prev, pedline *next);
 
 #endif
+
+
+
+
+
+
+
+

@@ -7,36 +7,37 @@
 #include "pedphrase.h"
 #include <stdlib.h>
 
-pedphrase * initialize_phrase(pedphrase * phrase) {
+pedphrase * init_phrase(pedphrase * phrase) {
+	pedphrase * newphrase;
 	if (phrase == NULL)
-		return NULL;
-	phrase->chars = (pedlist *)malloc(sizeof(pedlist));
-	initialize_list(phrase->chars);
-	phrase->length = 0;
-	initialize_box(&(phrase->boundingbox), 0, 0, 0,0);
-	phrase->font = NULL;
-	phrase->dir = PEDDIRECT_UNSET;
-	return phrase;
+	        newphrase = (pedphrase *)malloc (sizeof(pedphrase));
+	else
+		newphrase = phrase;
+	newphrase->chars = init_list(NULL);
+	newphrase->length = 0;
+	newphrase->phrasebox = init_box(NULL);
+	newphrase->font = NULL;
+	newphrase->dir = PEDDIRECT_UNSET;
+	return newphrase;
 }
 
 int add_character_to(pedphrase *phrase, pedchar *t) {
 	pedlistnode * node;
-	if (phrase == NULL)
+	if (phrase == NULL || t == NULL)
 		return 0;
-	node = (pedlistnode *)malloc(sizeof(pedlistnode));
-	node = initialize_list_node(node, (void *)t);
-	append_node_to_list(phrase->chars, node);
+	node = init_node(NULL, (void *)t);
+	phrase->chars = append_node_to_list(phrase->chars, node);
 	if (phrase->length == 0 ) {
 		phrase->font = t->pfont;
-		initialize_box(&(phrase->boundingbox), t->boundingbox.x0, t->boundingbox.y0, t->boundingbox.x1, t->boundingbox.y1);
+		phrase->phrasebox = init_box_with_value(phrase->phrasebox, t->charbox->x0, t->charbox->y0, t->charbox->x1, t->charbox->y1);
 		phrase->length = 1;
-		return phrase->length;
 	}
 	else {
-		grow_box(&(phrase->boundingbox), &(t->boundingbox));
+		phrase->phrasebox = grow_box(phrase->phrasebox, t->charbox);
 		phrase->length = phrase->length + 1;
-		return phrase->length;
 	}
+	determine_phrase_direction(phrase);
+	return phrase->length;
 }
 
 PED_BOOL is_space_phrase (pedphrase * phrase) {
@@ -55,8 +56,18 @@ PED_BOOL is_space_phrase (pedphrase * phrase) {
 }
 
 void finalize_phrase(pedphrase * phrase) {
+	pedlistnode * node;
+	pedchar * pchar;
 	if(phrase != NULL) {
+		node = phrase->chars->head;
+		while(node != NULL) {
+			pchar = (pedchar *) node->content;
+			finalize_char(pchar);
+			node->content = NULL;
+			node = node->next;
+		}
 		finalize_list (phrase->chars);
+		free(phrase->phrasebox);
 		free(phrase);
 	}
 }
@@ -64,9 +75,13 @@ void finalize_phrase(pedphrase * phrase) {
 int determine_phrase_direction(pedphrase * phrase) {
 	peddirection dir;
 	float ratio;
-	pedbox box = phrase->boundingbox;
+	pedbox *box;
+	if (phrase == NULL)
+		return PEDDIRECT_UNSET;
+	box = phrase->phrasebox;
+	
 	dir = PEDDIRECT_UNSET;
-	ratio = ratio_of_box (&box);
+	ratio = get_ratio (box);
 	if ( ratio > 2.0 ) {
 		dir = PEDDIRECT_HOR;
 	}
