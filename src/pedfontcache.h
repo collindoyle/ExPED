@@ -21,7 +21,7 @@ pedfont * find_font (pedfontcache *cache, pedfont * samplefont);
 
 pedfontcache* add_font (pedfontcache *cache, pedfont * samplefont);
  
-void finalize_cache (pedfontcache *cache);
+void finalize_font_cache (pedfontcache *cache);
 
 
 #endif

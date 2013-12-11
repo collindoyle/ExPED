@@ -11,7 +11,7 @@
 #include "common.h"
 
 typedef struct _pedfont {
-	char name[30];
+	char name[32];
 	float size;
 	pedfontstyle style;
 } pedfont;

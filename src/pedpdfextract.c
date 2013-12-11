@@ -1,0 +1,182 @@
+/* pedpdfextract.c : implementation  for extracting contents from pdf files
+ * written by CHU Yimin
+ * University of Tokyo
+ *
+ * There are a group of functions using the mupdf library to extract the contents from pdf documents.  Will assemble the contents into the structure of peddoc.
+ */
+
+#include "pedpdfextract.h"
+#include <string.h>
+#include <ctype.h>
+
+pedfontstyle  convert_font_style (fz_font *pfont) {
+	pedfontstyle style;
+	char * loc;
+	int i;
+	char backname[32];
+	style = PEDFONT_NONE;
+	strcpy(backname, pfont->name);
+	for ( i = 0; i < 32; i ++) {
+		backname[i] = tolower(backname[i]);
+	}
+	loc = NULL;
+	loc = strstr(backname, "bold");
+	if (pfont->ft_bold == 1 || loc != NULL)
+		style = PEDFONT_BOLD;
+	loc = strstr(backname, "italic");
+	if (pfont->ft_italic == 1 || loc != NULL) {
+		if (style == PEDFONT_BOLD)
+			style = PEDFONT_BOLD_ITALIC;
+		else
+			style = PEDFONT_ITALIC;
+	}
+	return style;
+}
+
+peddoc * loadfile(const char * filename) {
+	fz_context * ctx;
+	fz_document * mudoc;
+	peddoc * pdoc;
+	int pagecount;
+	int i;
+
+	ctx = fz_new_context(NULL,NULL,FZ_STORE_UNLIMITED);
+	mudoc = fz_open_document(ctx, filename);
+	pdoc = init_doc(filename);
+	pagecount = fz_count_pages(mudoc);
+	for(i = 0; i < pagecount; i++) {
+	        fz_device * tdev;
+		fz_display_list * displaylist;
+		fz_page * curpage;
+		fz_text_page *tpage;
+		fz_text_sheet *tsheet;
+		pedpage * mycurpage;
+		curpage = fz_load_page(mudoc, i);
+		tpage = fz_new_text_page(ctx);
+		tsheet = fz_new_text_sheet(ctx);
+		tdev = fz_new_text_device(ctx, tsheet,tpage);
+		fz_run_page(mudoc, curpage, tdev,&fz_identity, NULL);
+		/*
+		  get the characters from the text page then assemble to the tree structure
+		*/
+		mycurpage = convert_page(tpage, pdoc);
+		add_page_to(doc,mycurpage);
+                mycurpage = convert_page(tpage);
+		fz_free_device(tdev);
+                fz_free_text_sheet(ctx,tsheet);
+                fz_free_text_page(ctx,tpage);
+
+		fz_free_page(mudoc, curpage);
+	}
+	fz_close_document(mudoc);
+	fz_free_context(ctx);
+	return pdoc;
+}
+
+pedpage * convert_page(fz_text_page *tpage, peddoc *pdoc) {
+
+	pedpage * ppage;
+	int i;
+	pedlistnode * pnode = NULL;
+	pedphrase * pphrase = NULL;
+	pedline * pline = NULL;
+	pedlist * charlist = init_list(NULL);
+	pedlist * phraselist = init_list(NULL);
+	pedlist * linelist = init_list(NULL);
+
+	/*traverse the blocks of a text_page*/
+	for (i = 0; i < tpage->len; i++)
+	{
+		fz_page_block * p_pageblock = tpage->blocks[i];
+		if (p_pageblock->type == FZ_PAGE_BLOCK_TEXT) {
+			fz_text_block * p_text_block = p_pageblock->u.text;
+			int j;
+			for (j = 0; j< p_text_block->len; j++) {
+				
+				/*traverse the lines of the blocks*/
+				fz_text_line * pline = p_text_block->lines[j];
+				fz_text_span * pspan = pline->first_span;
+				while (pspan != NULL) {
+					
+					/*traverse the spans of the lines*/
+					int k;
+					for ( k = 0; k < pspan->len; k++) {
+						pedchar * newchar = NULL;
+						fz_text_style * texstyle = NULL;
+						pedfont * pdes = NULL;
+						pedfont * founddes = NULL;
+						fz_font * tfont = NULL;
+						pedfontstyle cstyle;
+                                                /*traverse the charater of the spans*/
+						fz_text_char * pchar = pspan->text[k];
+					        fz_rect cbox;
+						pedbox * pbox = NULL;
+						pedlistnode * pnode = NULL;
+						texstyle = pchar->style;
+						tfont = texstyle->font;
+						cstyle = convert_font_style(tfont);
+						peds = init_font(NULL, tfont->name, texstyle->size, cstyle);
+						founddes = find_font(pdoc->fontcache, peds);
+						if (founddes == NULL) {
+							add_font(pdoc->fontcache, peds);
+							founddes = peds;
+						}
+						else {
+						        free(peds);
+						}
+						/* get the font, box and content */
+						fz_text_char_bbox(&cbox, pspan,k);
+						pbox = init_box_with_value(NULL,cbox.x0, cbox.y0, cbox.y0, cbox.y1);
+						newchar = init_pedchar_with_content(NULL, pchar->c, pbox, pdes);
+						pnode = init_node(NULL, newchar);
+						append_node_to_list(charlist, pnode);
+					}
+					pspan = pspan->next;
+				}
+			}
+		}
+	}
+	pnode = charlist->head;
+	while (pnode != NULL) {
+		pedlistnode * pphrasenode = NULL;
+	        pphrasenode= phraselist->tail;
+		if (pphrasenode == NULL) {
+			pphrase = init_phrase(NULL);
+			add_character_to(pphrase, pnode->content);
+			pphrasenode = init_node(NULL,pphrase);
+			append_node_to_list(phraselist, pphrasenode);
+		}
+		else {
+			pphrase = pphrasenode->content;
+			if (is_groupable_to_phrase(pphrase, pnode->content) == PED_FALSE) {
+				add_character_to(pphrase, pnode->content);
+			}
+			else {
+				pphrase = init_phrase(NULL);
+				add_character_to(pphrase,pnode->content);
+				pphrasenode = init_node(NULL,pphrase);
+				append_node_to_list(phraselist, pphrasenode);
+			}
+		}
+		pnode = pnode->next;
+	}
+
+	pnode = phraselist->head;
+	while (pnode != NULL) {
+		pedlistnode *plinenode = NULL;
+		plinenode = linelist->tail;
+		if (plinenode == NULL)  {
+		}
+		else {
+			pline = p
+			if ()
+	/*Group the characters into the phrases, lines, zones and pages*/
+
+	return ppage;
+}
+
+
+
+
+
+

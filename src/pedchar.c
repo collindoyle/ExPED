@@ -174,22 +174,30 @@ int convert_ucs_to_str(char *str, unsigned int ucs)
 	return 4;
 }
 
-pedchar * init_pedchar (pedchar *pchar, char * content, pedbox *box, pedfont *font) {
-	pedchar * newchar;
+pedchar * init_pedchar_with_content (pedchar *pchar, int c, pedbox *box, pedfont *font) {
+	pedchar *newchar;
 	if (pchar == NULL) {
 		newchar = (pedchar *)malloc(sizeof(pedchar));
 		newchar->charbox = NULL;
 		newchar->pfont = NULL;
 	}
-	else
-		newchar = pchar;
-	set_char_content(newchar, content);
+	else newchar = pchar;
+	newchar->content = c;
 	if (newchar->charbox != NULL) {
 		free(newchar->charbox);
 		newchar->charbox = NULL;
 	}
 	newchar->charbox = init_box_with_value(NULL, box->x0, box->y0, box->x1, box->y1);
 	newchar->pfont = font;
+	return newchar;
+}
+
+pedchar * init_pedchar_with_str (pedchar *pchar, char * content, pedbox *box, pedfont *font) {
+	pedchar * newchar;
+	int c;
+	int len;
+	len = convert_str_to_ucs (&c, content);
+	newchar = init_pedchar_with_content(pchar, c, box, font);
 	return newchar;
 }
 

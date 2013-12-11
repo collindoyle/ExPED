@@ -50,7 +50,7 @@ pedfontcache * append_font_to_cache (pedfontcache *cache, pedfont * samplefont) 
 	return rescache;
 }
 
-void finalize_cache (pedfontcache * cache) {
+void finalize_font_cache (pedfontcache * cache) {
 	pedlistnode * pnode;
 	if (cache == NULL)
 		return;
