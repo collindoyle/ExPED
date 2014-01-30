@@ -11,3 +11,6 @@
 PED_BOOL is_groupable_to_phrase (pedphrase * phrase, pedchar * achar);
 
 PED_BOOL is_groupable_to_line (pedline * line, pedphrase * phrase);
+
+PED_BOOL is_groupable_to_zone (pedzone *zone, pedline *line);
+

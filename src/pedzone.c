@@ -59,4 +59,5 @@ int add_line_to (pedzone * zone, pedline * line) {
 }
 
 void extract_features (pedzone *zone) {
+
 }
